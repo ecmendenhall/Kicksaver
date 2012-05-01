@@ -13,7 +13,11 @@
     border-radius: 10px;
 }
 .project-info { margin: 0px 10px; }
+.project-form { padding-bottom: 0px; }
 </style>
+<title>
+Kicksaver: Projects under ${{ initial_budget }}
+</title>
 </head>
 <body>
     <div class="container">
@@ -24,25 +28,43 @@
             </div>
         </div>
         <div class="row">
-            <div class="span5 well projectform">
-            <form action="/project" class="form-inline">
+            <div class="span7 well project-form">
+            <form action="/project" id="projectform" class="form-inline">
             <div class="input-prepend">
-            <p>I'm willing to spend up to <span class="add-on">$</span><input type="text" value="{{ budget }}" name="b" class="input-min"> 
-               to save a struggling project.</p>
+            <p>I'm willing to spend up to 
+            <span class="add-on">$</span><input type="text" value="{{ initial_budget }}" name="b" class="input-min"> 
+            to save a struggling project.</p>
             </div>
-            <input type="submit" value="Save something!" class="btn">
+            <p><input type="submit" value="Save something!" class="btn"></p>
             </form>
             </div>
         </div>
         <div class="row">
-            <div class="span9 well">
+            <div class="span12 well">
             {% if project_dicts %}
                 <div>
-                <p>Rejoice! {{ projects }} projects meet your criteria!</p>
-                <p>Sort by: <select>
-                            <option>Closest to your budget</option>
-                            <option>Ending soonest</option>
-                         </select></p>
+                {% if budget_toolow %}
+                There are no projects within <strong>${{ initial_budget }}</strong> of their goal, but these are pretty close.
+                {% endif %}
+                {% if not budget_toolow %}
+                <p>{{ projects }} projects meet your criteria:</p>
+                {% endif %}
+                <p>
+                <form class="form-inline" method="get" action="/project">
+                   Sort by:
+                   <select id="sortby" name="sort" form="projectform" onchange="this.form.submit();">
+                        {% if sort == 'soon' %}
+                        <option value="soon">Ending soonest</option>
+                        <option value="close">Closest to goal</option>
+                        {% endif %}
+                        {% if sort == 'close' %}
+                        <option value="close">Closest to goal</option>
+                        <option value="soon">Ending soonest</option>
+                        {% endif %}
+                    </select>
+                    <noscript><input type="submit" value="Submit" class="btn"></noscript>
+                </form>
+                </p>
                 </div> 
                 {% for project in project_dicts %}
                 <div class="project">
@@ -50,15 +72,11 @@
                      src="{{ project.link }}" width="220px"></iframe>
                     <div class="project-info">
                         <ul class="unstyled">
-                        <li><strong>{{ project.time }}</strong> left.</li>
                         <li><strong>${{ project.left }}</strong> from its goal.</li>
                         </ul>
                     </div>
                 </div>
                 {% endfor %}
-            {% endif %}
-            {% if not project_dicts %}
-            Sorry, there are no projects within your budget right now.
             {% endif %}
             </div>
         </div>

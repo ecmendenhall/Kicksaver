@@ -76,8 +76,8 @@ def remove_old_projects():
 
 def run():        
     project_list = []   
-    get_ending_projects(10, ENDING_SOON, project_list)
-    get_ending_projects(10, SMALL_PROJECTS, project_list)
+    get_ending_projects(25, ENDING_SOON, project_list)
+    get_ending_projects(25, SMALL_PROJECTS, project_list)
     remove_old_projects()
     save_projects(project_list)
 
