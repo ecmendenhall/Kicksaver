@@ -14,28 +14,30 @@
 }
 .project-info { margin: 0px 10px; }
 .project-form { padding-bottom: 0px; }
+.green { color: #7CBC15; }
+.hide { display: none; }
 </style>
 <title>
-Kicksaver: Projects under ${{ initial_budget }}
+Kicksaver: Under ${{ initial_budget }}
 </title>
 </head>
 <body>
     <div class="container">
         <div class="row">
-            <div class="span3 well">
-            <h1>Kicksaver</h1>
-            Find projects ending soon.
+            <div class="span4 well">
+            <h1>Kick<span class="green">saver</span></h1>
+            Find and save Kickstarter projects ending soon.
             </div>
         </div>
         <div class="row">
-            <div class="span7 well project-form">
+            <div class="span6 well project-form">
             <form action="/project" id="projectform" class="form-inline">
             <div class="input-prepend">
             <p>I'm willing to spend up to 
             <span class="add-on">$</span><input type="text" value="{{ initial_budget }}" name="b" class="input-min"> 
             to save a struggling project.</p>
             </div>
-            <p><input type="submit" value="Save something!" class="btn"></p>
+            <p><input type="submit" value="Save something!" class="btn btn-large"></p>
             </form>
             </div>
         </div>
@@ -47,12 +49,12 @@ Kicksaver: Projects under ${{ initial_budget }}
                 There are no projects within <strong>${{ initial_budget }}</strong> of their goal, but these are pretty close.
                 {% endif %}
                 {% if not budget_toolow %}
-                <p>{{ projects }} projects meet your criteria:</p>
+                <p>There are <strong>{{ projects }}</strong> projects you can save.</p>
                 {% endif %}
                 <p>
                 <form class="form-inline" method="get" action="/project">
                    Sort by:
-                   <select id="sortby" name="sort" form="projectform" onchange="this.form.submit();">
+                   <select id="sortby" class="span2" name="sort" form="projectform" onchange="this.form.submit();">
                         {% if sort == 'soon' %}
                         <option value="soon">Ending soonest</option>
                         <option value="close">Closest to goal</option>
@@ -77,6 +79,12 @@ Kicksaver: Projects under ${{ initial_budget }}
                     </div>
                 </div>
                 {% endfor %}
+                <div>
+                <form method="get" action="/project">
+                <input form="projectform" type="number" name="p" value="0" class="hide" id="page">
+                <input form="projectform" type="submit" value="More" class="btn btn-large"></input>
+                </form>
+                </div>
             {% endif %}
             </div>
         </div>
