@@ -15,6 +15,11 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
         self.response.out.write(template.render(path, {}))
+
+class AboutHandler(webapp2.RequestHandler):
+    def get(self):
+        path = os.path.join(os.path.dirname(__file__), 'templates/about.html')
+        self.response.out.write(template.render(path, {}))
                 
 class ProjectHandler(webapp2.RequestHandler):
     def get(self):
@@ -76,6 +81,7 @@ class ProjectHandler(webapp2.RequestHandler):
                 budget = budget + 5
                 p = Project.all()
                 all_projects = p.filter('left < ', budget)
+            page = all_projects.fetch(8)
         for project in page:
             make_project_dict(project, project_dicts)
         
@@ -107,5 +113,6 @@ class ProjectHandler(webapp2.RequestHandler):
 
         
 app = webapp2.WSGIApplication([('/', MainHandler),
-                               ('/project', ProjectHandler)],
+                               ('/project', ProjectHandler),
+                               ('/about', AboutHandler)],
                               debug=True)

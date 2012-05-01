@@ -16,11 +16,33 @@
 .project-form { padding-bottom: 0px; }
 .green { color: #7CBC15; }
 .hide { display: none; }
+.btn-success {
+  background-color: #7CBC15;
+  background-image: -moz-linear-gradient(top, #7CBC15, #69a20e);
+  background-image: -ms-linear-gradient(top, #7CBC15, #69a20e);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7CBC15), to(#69a20e));
+  background-image: -webkit-linear-gradient(top, #7CBC15, #69a20e);
+  background-image: -o-linear-gradient(top, #7CBC15, #69a20e);
+  background-image: linear-gradient(top, #7CBC15, #69a20e);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7CBC15', endColorstr='#69a20e', GradientType=0);
+  border-color: #69a20e #69a20e #387038;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+}
+.btn-success:hover { background-color: #69a20e; }
 .hero-unit { 
     background-color: #ffffff;
     padding: 0px;
     margin-top: 25px;
 }
+.hero-unit h1 { letter-spacing: -.075em; }
+a { color: #55A4F2; }
+a:hover { color: #1071D1; }
+.about { padding-bottom: 25px; }
+.incognito { color: #000000; }
+.incognito:hover { color: #000000; }
+
 </style>
 <title>
 Kicksaver: Under ${{ initial_budget }}
@@ -30,7 +52,7 @@ Kicksaver: Under ${{ initial_budget }}
     <div class="container">
         <div class="hero-unit">
             <h1>Kick<span class="green">saver</span></h1>
-            Find and save Kickstarter projects ending soon.
+            <h3>Find and save <a href="http://kickstarter.com" class="incognito">Kickstarter</a> projects ending soon.</h3>
         </div>
         <div class="row">
             <div class="span6 well project-form">
@@ -40,19 +62,22 @@ Kicksaver: Under ${{ initial_budget }}
             <span class="add-on">$</span><input type="text" value="{{ initial_budget }}" name="b" class="input-min"> 
             to save a struggling project.</p>
             </div>
-            <p><input type="submit" value="Save something!" class="btn btn-large"></p>
+            <p><input type="submit" value="Save something!" class="btn btn-large btn-success green-button"></p>
             </form>
             </div>
         </div>
         <div class="row">
-            <div class="span12 well">
+            
             {% if project_dicts %}
+            <div class="span12 well">
                 <div>
                 {% if budget_toolow %}
-                There are no projects within <strong>${{ initial_budget }}</strong> of their goal, but these are pretty close.
+                <h3>
+                There are no projects within <span class="green">${{ initial_budget }}</span> of their goal, but these are pretty close.
+                </h3>
                 {% endif %}
                 {% if not budget_toolow %}
-                <p>There are <strong>{{ projects }}</strong> projects you can save.</p>
+                <h3>There are <strong>{{ projects }}</strong> projects you can save.</h3>
                 {% endif %}
                 <p>
                 <form class="form-inline" method="get" action="/project">
@@ -70,7 +95,8 @@ Kicksaver: Under ${{ initial_budget }}
                     <noscript><input type="submit" value="Submit" class="btn"></noscript>
                 </form>
                 </p>
-                </div> 
+                </div>
+                <div> 
                 {% for project in project_dicts %}
                 <div class="project">
                     <iframe frameborder="0" height="380px" 
@@ -82,14 +108,22 @@ Kicksaver: Under ${{ initial_budget }}
                     </div>
                 </div>
                 {% endfor %}
-                <div>
+                </div>
+                {% if projects > 8 %}
+                <div class="span10">
                 <form method="get" action="/project">
                 <input form="projectform" type="number" name="p" value="{{ pages }}" class="hide" id="page">
                 <button form="projectform" type="submit" name="more" value="True" class="btn btn-large">More</button>
                 </form>
                 </div>
                 {% endif %}
+                
             </div>
+            {% endif %}
+            
+        </div>
+        <div class="about">
+            <a href="/about"class="pull-right">About Kicksaver</a>
         </div>
     </div>
 </body>
