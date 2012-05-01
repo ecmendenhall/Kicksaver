@@ -43,12 +43,16 @@ class ProjectHandler(webapp2.RequestHandler):
         input_error = False
         budget_toolow = False
 
+        
         p = self.request.get('p')
         try:
             pages = int(p)
         except ValueError:
             pages = 0
-        
+
+        more = self.request.get('more')
+        if more:
+            pages += 1 
         
         sort = self.request.get('sort')
         if sort not in ['soon', 'close']:
@@ -71,7 +75,7 @@ class ProjectHandler(webapp2.RequestHandler):
             while all_projects.count() < 4:
                 budget = budget + 5
                 p = Project.all()
-                projects = p.filter('left < ', budget)
+                all_projects = p.filter('left < ', budget)
         for project in page:
             make_project_dict(project, project_dicts)
         
@@ -93,6 +97,7 @@ class ProjectHandler(webapp2.RequestHandler):
         template_dict['budget'] = budget
         template_dict['projects'] = all_projects.count()
         template_dict['sort'] = sort
+        template_dict['pages'] = pages
         template_dict['budget_toolow'] = budget_toolow
         
         path = os.path.join(os.path.dirname(__file__), 'templates/projects.html')

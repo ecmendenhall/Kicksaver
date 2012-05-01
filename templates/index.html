@@ -4,24 +4,33 @@
 <link rel="stylesheet" href="/static/bootstrap.css" type="text/css">
 <style>
 .input-min { width: 30px; }
+.project-form { padding-bottom: 0px; }
+.green { color: #7CBC15; }
+.hide { display: none; }
+.hero-unit { 
+    background-color: #ffffff;
+    padding: 0px;
+    margin-top: 25px;
+}
 </style>
+<title>
+Kicksaver: Find and save Kickstarter projects ending soon.
+</title>
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="span3 well">
-            <h1>Kicksaver</h1>
-            Find projects ending soon.
-            </div>
+        <div class="hero-unit">
+            <h1>Kick<span class="green">saver</span></h1>
+            Find and save Kickstarter projects ending soon.
         </div>
         <div class="row">
-            <div class="span5 well projectform">
+            <div class="span6 well">
             <form action="/project" class="form-inline">
             <div class="input-prepend">
             <p>I'm willing to spend up to <span class="add-on">$</span><input type="text" value="50" name="b" class="input-min"> 
                to save a struggling project.</p>
             </div>
-            <input type="submit" value="Save something!" class="btn">
+            <input type="submit" value="Save something!" class="btn btn-large">
             </form>
             </div>
         </div>

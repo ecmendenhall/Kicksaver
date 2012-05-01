@@ -16,6 +16,11 @@
 .project-form { padding-bottom: 0px; }
 .green { color: #7CBC15; }
 .hide { display: none; }
+.hero-unit { 
+    background-color: #ffffff;
+    padding: 0px;
+    margin-top: 25px;
+}
 </style>
 <title>
 Kicksaver: Under ${{ initial_budget }}
@@ -23,11 +28,9 @@ Kicksaver: Under ${{ initial_budget }}
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="span4 well">
+        <div class="hero-unit">
             <h1>Kick<span class="green">saver</span></h1>
             Find and save Kickstarter projects ending soon.
-            </div>
         </div>
         <div class="row">
             <div class="span6 well project-form">
@@ -81,11 +84,11 @@ Kicksaver: Under ${{ initial_budget }}
                 {% endfor %}
                 <div>
                 <form method="get" action="/project">
-                <input form="projectform" type="number" name="p" value="0" class="hide" id="page">
-                <input form="projectform" type="submit" value="More" class="btn btn-large"></input>
+                <input form="projectform" type="number" name="p" value="{{ pages }}" class="hide" id="page">
+                <button form="projectform" type="submit" name="more" value="True" class="btn btn-large">More</button>
                 </form>
                 </div>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>

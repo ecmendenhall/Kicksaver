@@ -1,4 +1,4 @@
 cron:
 - description: Kickstarter project crawler
   url: /crawl
-  schedule: every 6 hours
+  schedule: every 8 hours
