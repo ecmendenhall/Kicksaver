@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/static/bootstrap.css" type="text/css">
+<style>
+.input-min { width: 30px; }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span3 well">
+            <h1>Kicksaver</h1>
+            Find projects ending soon.
+            </div>
+        </div>
+        <div class="row">
+            <div class="span5 well projectform">
+            <form action="/project" class="form-inline">
+            <div class="input-prepend">
+            <p>I'm willing to spend up to <span class="add-on">$</span><input type="text" value="50" name="b" class="input-min"> 
+               to save a struggling project.</p>
+            </div>
+            <input type="submit" value="Save something!" class="btn">
+            </form>
+            </div>
+        </div>
+    </div>
+</body>

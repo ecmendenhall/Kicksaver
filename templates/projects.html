@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="static/bootstrap.css" type="text/css">
+<style>
+.input-min { width: 30px; }
+.project { 
+    float: left; 
+    background-color: #eeeeee;
+    margin: 5px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+.project-info { margin: 0px 10px; }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span3 well">
+            <h1>Kicksaver</h1>
+            Find projects ending soon.
+            </div>
+        </div>
+        <div class="row">
+            <div class="span5 well projectform">
+            <form action="/project" class="form-inline">
+            <div class="input-prepend">
+            <p>I'm willing to spend up to <span class="add-on">$</span><input type="text" value="{{ budget }}" name="b" class="input-min"> 
+               to save a struggling project.</p>
+            </div>
+            <input type="submit" value="Save something!" class="btn">
+            </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span9 well">
+            {% if project_dicts %}
+                <div>
+                <p>Rejoice! {{ projects }} projects meet your criteria!</p>
+                <p>Sort by: <select>
+                            <option>Closest to your budget</option>
+                            <option>Ending soonest</option>
+                         </select></p>
+                </div> 
+                {% for project in project_dicts %}
+                <div class="project">
+                    <iframe frameborder="0" height="380px" 
+                     src="{{ project.link }}" width="220px"></iframe>
+                    <div class="project-info">
+                        <ul class="unstyled">
+                        <li><strong>{{ project.time }}</strong> left.</li>
+                        <li><strong>${{ project.left }}</strong> from its goal.</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% if not project_dicts %}
+            Sorry, there are no projects within your budget right now.
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
