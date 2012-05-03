@@ -1,3 +1,5 @@
+h1, h2, h3 { font-family: 'Oxygen', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+strong { font-family: 'Oxygen', 'Helvetica Neue', Helvetica, Arial, sans-serif; }
 .input-min { width: 30px; }
 .project { 
     float: left; 
@@ -27,7 +29,7 @@
 }
 .btn-success:hover { background-color: #69a20e; }
 .hero-unit { 
-    background-color: #ffffff;
+    background-color: transparent;
     padding: 0px;
     margin-top: 25px;
 }

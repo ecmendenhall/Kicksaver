@@ -3,6 +3,7 @@
 <head>
 <link rel="stylesheet" href="static/bootstrap.css" type="text/css">
 <link rel="stylesheet" href="static/projects.css" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 <title>
 Kicksaver: Under ${{ initial_budget }}
 </title>
@@ -18,21 +19,12 @@ function ProjectDict() {
 var project_dict = new ProjectDict();
 $(document).ready(function() {
     $('#more').bind('click', function () {
-        if (project_dict.loaded == false) {
-            project_dict.loaded = true;
-            var budget = {{ budget }}
-            var sort = '{{ sort }}'
-            $.get("/more?b=" + budget + "&sort=" + sort, function(data) {
-                var dict = jQuery.parseJSON(data);
-                project_dict.project_data = dict;            
-            });
-        }
-        var cursor = project_dict.cursor
-        var newcursor = project_dict.cursor + 8;
-        project_dict.cursor = newcursor;
-        var projects = project_dict.project_data["projects"].slice(cursor, newcursor);
-        console.log(projects);
-        for (var project in projects) {
+        function loadmore () {
+            var cursor = project_dict.cursor;
+            var newcursor = project_dict.cursor + 8;
+            project_dict.cursor = newcursor;
+            var projects = project_dict.project_data["projects"].slice(cursor, newcursor);
+            for (var project in projects) {
             var project_container = $('#project-container');
             project_container.append('<div class="project"><iframe frameborder="0" height="380px" width="220px"></iframe><div class="project-info"><ul class="unstyled"><li><strong class="amount-left"></strong> from its goal.</li></ul></div></div>');
             var project_divs = project_container.children();
@@ -41,6 +33,19 @@ $(document).ready(function() {
             $(iframe).attr("src", projects[project]["link"]);
             $(project_div).find('.amount-left').text('$' + projects[project]["left"]);
             }
+        }
+        if (project_dict.loaded == false) {
+            project_dict.loaded = true;
+            var budget = {{ budget }}
+            var sort = '{{ sort }}'
+            $.get("/more?b=" + budget + "&sort=" + sort, function(data) {
+                var dict = jQuery.parseJSON(data);
+                project_dict.project_data = dict;
+                loadmore();            
+            });
+        }
+        loadmore();
+        
     });
 });
 </script>
