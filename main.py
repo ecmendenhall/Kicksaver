@@ -10,6 +10,7 @@ from operator import itemgetter
 import webapp2
 import os
 import kickparser
+import json
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -72,7 +73,7 @@ class ProjectHandler(webapp2.RequestHandler):
             budget = initial_budget
                    
         p = Project.all()
-        all_projects = p.filter('left < ', budget)
+        all_projects = p.filter('left < ', budget).order('left').order('-end')
         page = all_projects.fetch(8)
         cursor = p.cursor()
         if all_projects.count() == 0:
@@ -105,14 +106,67 @@ class ProjectHandler(webapp2.RequestHandler):
         template_dict['sort'] = sort
         template_dict['pages'] = pages
         template_dict['budget_toolow'] = budget_toolow
+        template_dict['cursor'] = cursor
         
         path = os.path.join(os.path.dirname(__file__), 'templates/projects.html')
         self.response.out.write(template.render(path, template_dict))
 
-    
+class MoreHandler(webapp2.RequestHandler):
+    def get(self):
 
+        def make_project_dict(project, project_list):
+            project_dict = {}
+            project_dict['link'] = project.link + '/widget/card.html'
+            project_dict['left'] = project.left
+            timeleft =  project.end - datetime.now() + timedelta(0, 14400)
+            project_dict['timeleft'] = (timeleft.days*60*60*24) + timeleft.seconds
+            hours = str(timeleft.seconds / 3600)
+            if timeleft.days < 0:
+                timeleft_str = hours
+            else:
+                timeleft_str = str(timeleft.days) + ' days, ' + hours + ' hours'
+            project_dict['time'] = timeleft_str
+            project_list.append(project_dict)
+
+        cursor = self.request.get('c')
+
+        budget = self.request.get('b')
+        try:
+            budget = int(float(budget))
+        except ValueError:
+            budget = 0
+
+        sort = self.request.get('sort')
+        if sort not in ['soon', 'close']:
+            sort = 'soon'
         
+        p = Project.all().with_cursor(cursor)
+        projects = p.filter('left < ', budget).order('left').order('-end')
+        page = projects.fetch(8)
+        cursor = p.cursor()
+
+        project_dicts = []
+
+        for project in page:
+            make_project_dict(project, project_dicts)
+        
+        project_dicts.sort(key=lambda i: i['timeleft'])
+
+        if sort == 'close':
+            project_dicts.sort(key=itemgetter('left'))
+
+        response_dict = {}
+        response_dict['projects'] = project_dicts
+        response_dict['cursor'] = cursor
+
+        json_response = json.dumps(response_dict)
+        
+        self.response.headers.add_header('content-type', 'application/json', charset='utf-8')
+        self.response.out.write(json_response)
+
+       
 app = webapp2.WSGIApplication([('/', MainHandler),
                                ('/project', ProjectHandler),
-                               ('/about', AboutHandler)],
+                               ('/about', AboutHandler),
+                               ('/more', MoreHandler)],
                               debug=True)

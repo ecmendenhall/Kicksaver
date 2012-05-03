@@ -2,51 +2,39 @@
 <html>
 <head>
 <link rel="stylesheet" href="static/bootstrap.css" type="text/css">
-<style>
-.input-min { width: 30px; }
-.project { 
-    float: left; 
-    background-color: #eeeeee;
-    margin: 5px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-}
-.project-info { margin: 0px 10px; }
-.project-form { padding-bottom: 0px; }
-.green { color: #7CBC15; }
-.hide { display: none; }
-.btn-success {
-  background-color: #7CBC15;
-  background-image: -moz-linear-gradient(top, #7CBC15, #69a20e);
-  background-image: -ms-linear-gradient(top, #7CBC15, #69a20e);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7CBC15), to(#69a20e));
-  background-image: -webkit-linear-gradient(top, #7CBC15, #69a20e);
-  background-image: -o-linear-gradient(top, #7CBC15, #69a20e);
-  background-image: linear-gradient(top, #7CBC15, #69a20e);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7CBC15', endColorstr='#69a20e', GradientType=0);
-  border-color: #69a20e #69a20e #387038;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
-}
-.btn-success:hover { background-color: #69a20e; }
-.hero-unit { 
-    background-color: #ffffff;
-    padding: 0px;
-    margin-top: 25px;
-}
-.hero-unit h1 { letter-spacing: -.075em; }
-a { color: #55A4F2; }
-a:hover { color: #1071D1; }
-.about { padding-bottom: 25px; }
-.incognito { color: #000000; }
-.incognito:hover { color: #000000; }
-
-</style>
+<link rel="stylesheet" href="static/projects.css" type="text/css">
 <title>
 Kicksaver: Under ${{ initial_budget }}
 </title>
+<script type="text/javascript" 
+ src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#more').bind('click', function () {
+        var budget = {{ budget }}
+        var sort = '{{ sort }}'
+        var cursor = $('.cursorcontainer').attr('id');
+        $.get("/more?c=" + cursor + "&b=" + budget + "&sort=" + sort, function(data) {
+            console.log(data);
+            project_data = jQuery.parseJSON(data)
+            var newcursor = project_data["cursor"];
+            $('.cursorcontainer').attr('id', newcursor);
+            var projects = project_data["projects"];
+            for (var project in projects) {
+                var project_container = $('#project-container');
+                project_container.append('<div class="project"><iframe frameborder="0" height="380px" width="220px"></iframe><div class="project-info"><ul class="unstyled"><li><strong class="amount-left"></strong> from its goal.</li></ul></div></div>');
+                var project_divs = project_container.children();
+                var project_div = project_divs[project_divs.length - 1];
+                var iframe = $(project_div).children('iframe')[0];
+                $(iframe).attr("src", projects[project]["link"]);
+                $(project_div).find('.amount-left').text('$' + projects[project]["left"]);              
+            }
+        });
+    });
+});
+</script>
+<script type="text/javascript" src="static/analytics.js"></script>
 </head>
 <body>
     <div class="container">
@@ -77,7 +65,12 @@ Kicksaver: Under ${{ initial_budget }}
                 </h3>
                 {% endif %}
                 {% if not budget_toolow %}
-                <h3>There are <strong>{{ projects }}</strong> projects you can save.</h3>
+                    {% if projects == 1 %}
+                    <h3>There is currently <strong class="green">{{ projects }}</strong> project you can save.</h3>
+                    {% endif %}
+                    {% if projects != 1 %}
+                    <h3>There are currently <strong class="green">{{ projects }}</strong> projects you can save.</h3>
+                    {% endif %}
                 {% endif %}
                 <p>
                 <form class="form-inline" method="get" action="/project">
@@ -96,7 +89,7 @@ Kicksaver: Under ${{ initial_budget }}
                 </form>
                 </p>
                 </div>
-                <div> 
+                <div id="project-container"> 
                 {% for project in project_dicts %}
                 <div class="project">
                     <iframe frameborder="0" height="380px" 
@@ -111,10 +104,13 @@ Kicksaver: Under ${{ initial_budget }}
                 </div>
                 {% if projects > 8 %}
                 <div class="span10">
+                <noscript>
                 <form method="get" action="/project">
                 <input form="projectform" type="number" name="p" value="{{ pages }}" class="hide" id="page">
                 <button form="projectform" type="submit" name="more" value="True" class="btn btn-large">More</button>
                 </form>
+                </noscript>
+                <button class="btn btn-large" id="more"><span class="cursorcontainer" id="{{ cursor }}">More</span></button>
                 </div>
                 {% endif %}
                 

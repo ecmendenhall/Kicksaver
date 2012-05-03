@@ -6,14 +6,18 @@ threadsafe: no
 
 handlers:
 - url: /favicon\.ico
-  static_files: favicon.ico
-  upload: favicon\.ico
+  static_files: static/favicon.png
+  upload: static/favicon\.png
 
 - url: /static
   static_dir: static
 
 - url: /crawl
   script: kickparser.py
+  login: admin
+
+- url: /tweet
+  script: twitter.py
   login: admin
 
 - url: .*
