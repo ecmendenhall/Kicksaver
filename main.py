@@ -73,24 +73,24 @@ class ProjectHandler(webapp2.RequestHandler):
             budget = initial_budget
                    
         p = Project.all()
-        all_projects = p.filter('left < ', budget).order('left').order('-end')
-        page = all_projects.fetch(8)
-        cursor = p.cursor()
+        all_projects = p.filter('left < ', budget)
+        page = all_projects
+        
         if all_projects.count() == 0:
             budget_toolow = True
             while all_projects.count() < 4:
                 budget = budget + 5
                 p = Project.all()
                 all_projects = p.filter('left < ', budget)
-            page = all_projects.fetch(8)
+            page = all_projects
         for project in page:
             make_project_dict(project, project_dicts)
         
-        if pages:
+        """if pages:
             for page in range(0, pages):
                 page, cursor = get_next_page(cursor)
                 for project in page:
-                    make_project_dict(project, project_dicts)
+                    make_project_dict(project, project_dicts)"""
         
         
         project_dicts.sort(key=lambda i: i['timeleft'])
@@ -99,14 +99,14 @@ class ProjectHandler(webapp2.RequestHandler):
             project_dicts.sort(key=itemgetter('left'))
 
         template_dict = {}
-        template_dict['project_dicts'] = project_dicts
+        template_dict['project_dicts'] = project_dicts[:8]
         template_dict['initial_budget'] = initial_budget
         template_dict['budget'] = budget
         template_dict['projects'] = all_projects.count()
         template_dict['sort'] = sort
         template_dict['pages'] = pages
         template_dict['budget_toolow'] = budget_toolow
-        template_dict['cursor'] = cursor
+        #template_dict['cursor'] = cursor
         
         path = os.path.join(os.path.dirname(__file__), 'templates/projects.html')
         self.response.out.write(template.render(path, template_dict))
@@ -128,7 +128,7 @@ class MoreHandler(webapp2.RequestHandler):
             project_dict['time'] = timeleft_str
             project_list.append(project_dict)
 
-        cursor = self.request.get('c')
+        #cursor = self.request.get('c')
 
         budget = self.request.get('b')
         try:
@@ -140,24 +140,25 @@ class MoreHandler(webapp2.RequestHandler):
         if sort not in ['soon', 'close']:
             sort = 'soon'
         
-        p = Project.all().with_cursor(cursor)
-        projects = p.filter('left < ', budget).order('left').order('-end')
-        page = projects.fetch(8)
-        cursor = p.cursor()
+        p = Project.all()
+        projects = p.filter('left < ', budget)
+        page = projects
+        #cursor = p.cursor()
 
         project_dicts = []
 
         for project in page:
             make_project_dict(project, project_dicts)
         
-        project_dicts.sort(key=lambda i: i['timeleft'])
+        if sort == 'soon':
+            project_dicts.sort(key=lambda i: i['timeleft'])
 
         if sort == 'close':
             project_dicts.sort(key=itemgetter('left'))
 
         response_dict = {}
         response_dict['projects'] = project_dicts
-        response_dict['cursor'] = cursor
+        #response_dict['cursor'] = cursor
 
         json_response = json.dumps(response_dict)
         

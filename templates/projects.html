@@ -10,27 +10,37 @@ Kicksaver: Under ${{ initial_budget }}
  src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
 </script>
 <script type="text/javascript">
+function ProjectDict() {
+    this.loaded = false;
+    this.cursor = 0;
+    this.project_data= {"projects":[]};
+};
+var project_dict = new ProjectDict();
 $(document).ready(function() {
     $('#more').bind('click', function () {
-        var budget = {{ budget }}
-        var sort = '{{ sort }}'
-        var cursor = $('.cursorcontainer').attr('id');
-        $.get("/more?c=" + cursor + "&b=" + budget + "&sort=" + sort, function(data) {
-            console.log(data);
-            project_data = jQuery.parseJSON(data)
-            var newcursor = project_data["cursor"];
-            $('.cursorcontainer').attr('id', newcursor);
-            var projects = project_data["projects"];
-            for (var project in projects) {
-                var project_container = $('#project-container');
-                project_container.append('<div class="project"><iframe frameborder="0" height="380px" width="220px"></iframe><div class="project-info"><ul class="unstyled"><li><strong class="amount-left"></strong> from its goal.</li></ul></div></div>');
-                var project_divs = project_container.children();
-                var project_div = project_divs[project_divs.length - 1];
-                var iframe = $(project_div).children('iframe')[0];
-                $(iframe).attr("src", projects[project]["link"]);
-                $(project_div).find('.amount-left').text('$' + projects[project]["left"]);              
+        if (project_dict.loaded == false) {
+            project_dict.loaded = true;
+            var budget = {{ budget }}
+            var sort = '{{ sort }}'
+            $.get("/more?b=" + budget + "&sort=" + sort, function(data) {
+                var dict = jQuery.parseJSON(data);
+                project_dict.project_data = dict;            
+            });
+        }
+        var cursor = project_dict.cursor
+        var newcursor = project_dict.cursor + 8;
+        project_dict.cursor = newcursor;
+        var projects = project_dict.project_data["projects"].slice(cursor, newcursor);
+        console.log(projects);
+        for (var project in projects) {
+            var project_container = $('#project-container');
+            project_container.append('<div class="project"><iframe frameborder="0" height="380px" width="220px"></iframe><div class="project-info"><ul class="unstyled"><li><strong class="amount-left"></strong> from its goal.</li></ul></div></div>');
+            var project_divs = project_container.children();
+            var project_div = project_divs[project_divs.length - 1];
+            var iframe = $(project_div).children('iframe')[0];
+            $(iframe).attr("src", projects[project]["link"]);
+            $(project_div).find('.amount-left').text('$' + projects[project]["left"]);
             }
-        });
     });
 });
 </script>
@@ -110,7 +120,7 @@ $(document).ready(function() {
                 <button form="projectform" type="submit" name="more" value="True" class="btn btn-large">More</button>
                 </form>
                 </noscript>
-                <button class="btn btn-large" id="more"><span class="cursorcontainer" id="{{ cursor }}">More</span></button>
+                <button class="btn btn-large" id="more"><span class="cursorcontainer" id="0">More</span></button>
                 </div>
                 {% endif %}
                 
