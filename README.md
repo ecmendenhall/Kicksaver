@@ -3,7 +3,7 @@ projects and practice working with Google App Engine and AJAX. It parses the
 [Ending Soon](http://www.kickstarter.com/discover/ending-soon) and 
 [Small Projects](http://www.kickstarter.com/discover/small-projects) categories a few times a day 
 to find projects ending soon. This means it won't always be completely up to date, but it should be close.
-A working version of the application is available at [http://www.kicksaver.com].
+A working version of the application is available at http://www.kicksaver.com.
 
 Kicksaver was written in Python for Google App Engine. 
 The backend requires [BeautifulSoup](http://www.crummy.com/software/BeautifulSoup/) 
