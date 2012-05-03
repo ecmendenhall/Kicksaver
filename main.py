@@ -48,13 +48,13 @@ class ProjectHandler(webapp2.RequestHandler):
         project_dicts = []
         input_error = False
         budget_toolow = False
-
+        number_results = 8
         
         p = self.request.get('p')
         try:
             pages = int(p)
         except ValueError:
-            pages = 0
+            pages = 1
 
         more = self.request.get('more')
         if more:
@@ -86,12 +86,12 @@ class ProjectHandler(webapp2.RequestHandler):
         for project in page:
             make_project_dict(project, project_dicts)
         
-        """if pages:
-            for page in range(0, pages):
-                page, cursor = get_next_page(cursor)
-                for project in page:
-                    make_project_dict(project, project_dicts)"""
-        
+        if pages:
+            number_results = pages * 8
+            #for page in range(0, pages):
+             #   page, cursor = get_next_page(cursor)
+              #  for project in page:
+               #     make_project_dict(project, project_dicts)
         
         project_dicts.sort(key=lambda i: i['timeleft'])
 
@@ -99,14 +99,13 @@ class ProjectHandler(webapp2.RequestHandler):
             project_dicts.sort(key=itemgetter('left'))
 
         template_dict = {}
-        template_dict['project_dicts'] = project_dicts[:8]
+        template_dict['project_dicts'] = project_dicts[:number_results]
         template_dict['initial_budget'] = initial_budget
         template_dict['budget'] = budget
         template_dict['projects'] = all_projects.count()
         template_dict['sort'] = sort
         template_dict['pages'] = pages
         template_dict['budget_toolow'] = budget_toolow
-        #template_dict['cursor'] = cursor
         
         path = os.path.join(os.path.dirname(__file__), 'templates/projects.html')
         self.response.out.write(template.render(path, template_dict))
@@ -128,8 +127,6 @@ class MoreHandler(webapp2.RequestHandler):
             project_dict['time'] = timeleft_str
             project_list.append(project_dict)
 
-        #cursor = self.request.get('c')
-
         budget = self.request.get('b')
         try:
             budget = int(float(budget))
@@ -143,7 +140,6 @@ class MoreHandler(webapp2.RequestHandler):
         p = Project.all()
         projects = p.filter('left < ', budget)
         page = projects
-        #cursor = p.cursor()
 
         project_dicts = []
 
@@ -158,7 +154,6 @@ class MoreHandler(webapp2.RequestHandler):
 
         response_dict = {}
         response_dict['projects'] = project_dicts
-        #response_dict['cursor'] = cursor
 
         json_response = json.dumps(response_dict)
         

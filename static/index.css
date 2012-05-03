@@ -29,3 +29,17 @@ a:hover { color: #1071D1; }
 .hero-unit h1 { letter-spacing: -.075em; }
 .incognito { color: #000000; }
 .incognito:hover { color: #000000; }
+.buttondiv { 
+    padding: 0px;
+    margin-right: -72px;
+    margin-bottom: 0px;
+}
+.buttons { margin-bottom: 0px; }
+.infobox { 
+    text-align: right; }
+.infobox p { padding: 0px; }
+.about { 
+    margin-bottom: 0px;
+    text-align: right;
+    font-size: 80%; }
+#about { margin-top: 38px; }  

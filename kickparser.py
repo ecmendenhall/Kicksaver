@@ -58,14 +58,17 @@ def parse_projects(projects, project_list):
 
 def save_projects(project_list):
     projects = []
-    for p in project_list:
+    unduped_project_list = []
+    for project in project_list:
+        if project not in unduped_project_list:
+            unduped_project_list.append(project)
+    for p in unduped_project_list:
         project = Project()
         project.link = 'http://www.kickstarter.com' + p['link']
         project.left = p['left'] 
         project.end = p['end']
         project.saved = CRAWL_TIME
-        if project not in projects:
-            projects.append(project)
+        projects.append(project)
     db.put(projects)
 
 def remove_old_projects():

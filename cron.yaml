@@ -1,7 +1,7 @@
 cron:
 - description: Kickstarter project crawler
   url: /crawl
-  schedule: every 8 hours
+  schedule: every 6 hours
 - description: Twitter update script
   url: /tweet
   schedule: every 2 hours

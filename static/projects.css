@@ -10,7 +10,6 @@ strong { font-family: 'Oxygen', 'Helvetica Neue', Helvetica, Arial, sans-serif; 
     border-radius: 10px;
 }
 .project-info { margin: 0px 10px; }
-.project-form { padding-bottom: 0px; }
 .green { color: #7CBC15; }
 .hide { display: none; }
 .btn-success {
@@ -39,3 +38,18 @@ a:hover { color: #1071D1; }
 .about { padding-bottom: 25px; }
 .incognito { color: #000000; }
 .incognito:hover { color: #000000; }
+.buttondiv { 
+    padding: 0px;
+    margin-right: -72px;
+    margin-bottom: 0px;
+}
+.buttons { margin-bottom: 0px; }
+.infobox { text-align: right; }
+.infobox p { padding: 0px; }
+.about { 
+    margin-bottom: 0px;
+    text-align: right;
+    font-size: 80%;
+    padding-bottom: 0px;
+}
+#about { margin-top: 38px; }  

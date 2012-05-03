@@ -7,6 +7,14 @@
 <title>
 Kicksaver: Under ${{ initial_budget }}
 </title>
+<meta itemprop="name" content="Kicksaver: Find and save Kickstarter projects ending soon.">
+<meta itemprop="description" content="Kicksaver finds Kickstarter projects that will end soon without meeting their funding goals. If you have $20 to spare, you can help save a struggling project!">
+<meta property="og:title" content="Kicksaver: Find and save Kickstarter projects ending soon." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://www.kicksaver.net" />
+<meta property="og:image" content="" />
+<meta property="og:site_name" content="Kicksaver" />
+<meta property="fb:admins" content="10134383" />
 <script type="text/javascript" 
  src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
 </script>
@@ -18,6 +26,7 @@ function ProjectDict() {
 };
 var project_dict = new ProjectDict();
 $(document).ready(function() {
+    $('#morediv').append('<button class="btn btn-large" id="more">More</button>');
     $('#more').bind('click', function () {
         function loadmore () {
             var cursor = project_dict.cursor;
@@ -68,6 +77,30 @@ $(document).ready(function() {
             <p><input type="submit" value="Save something!" class="btn btn-large btn-success green-button"></p>
             </form>
             </div>
+            <div class="span3 well infobox">
+                <p>Follow <strong><a href="http://twitter.com/Kicksaver">@Kicksaver</a></strong> for live updates on projects ending soon.</p>
+                <div class="buttondiv">
+                <p class="pull-right buttons">
+                <a href="https://twitter.com/share" class="twitter-share-button" data-text="Kicksaver: Find and save Kickstarter projects ending soon." 
+                   data-via="Kicksaver" data-count="none">Tweet</a>
+                <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                <g:plusone size="medium" annotation="none"></g:plusone>
+                <script type="text/javascript">
+                    (function() {
+                        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                        po.src = 'https://apis.google.com/js/plusone.js';
+                        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                    })();
+                </script>
+                <iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.kicksaver.com&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21&amp;appId=101479082512" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:120px; height:21px;" allowTransparency="true"></iframe>
+                </p>
+                </div>
+                <div>
+                <p id="about">
+                <strong><a href="/about"class="about pull-right">About</a></strong>
+                </p>
+                </div>
+            </div>
         </div>
         <div class="row">
             
@@ -100,7 +133,7 @@ $(document).ready(function() {
                         <option value="soon">Ending soonest</option>
                         {% endif %}
                     </select>
-                    <noscript><input type="submit" value="Submit" class="btn"></noscript>
+                    <noscript><input type="submit" form="projectform" value="Submit" class="btn"></noscript>
                 </form>
                 </p>
                 </div>
@@ -118,23 +151,19 @@ $(document).ready(function() {
                 {% endfor %}
                 </div>
                 {% if projects > 8 %}
-                <div class="span10">
+                <div class="span10" id="morediv">
                 <noscript>
                 <form method="get" action="/project">
                 <input form="projectform" type="number" name="p" value="{{ pages }}" class="hide" id="page">
                 <button form="projectform" type="submit" name="more" value="True" class="btn btn-large">More</button>
                 </form>
                 </noscript>
-                <button class="btn btn-large" id="more"><span class="cursorcontainer" id="0">More</span></button>
                 </div>
                 {% endif %}
                 
             </div>
             {% endif %}
             
-        </div>
-        <div class="about">
-            <a href="/about"class="pull-right">About Kicksaver</a>
         </div>
     </div>
 </body>
