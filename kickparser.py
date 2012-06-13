@@ -1,5 +1,8 @@
+#!/usr/bin/env python
+
 from __future__ import division
 from google.appengine.ext import db
+from google.appengine.api import memcache
 from models import Project
 from urllib2 import urlopen 
 from urlparse import urlparse
@@ -7,6 +10,7 @@ from bs4 import BeautifulSoup
 from operator import itemgetter
 from time import strptime, mktime
 from datetime import datetime
+import urllib2
 
 ENDING_SOON = 'http://www.kickstarter.com/discover/ending-soon'
 SMALL_PROJECTS = 'http://www.kickstarter.com/discover/small-projects'
@@ -20,8 +24,11 @@ def get_ending_projects(pages, url, project_list):
     
         projects_url = url + '?page=' + str(page)
         print projects_url
-    
-        p = urlopen(projects_url).read()
+        
+        request = urllib2.Request(projects_url)
+        request.add_header('User-Agent', 'Kicksaver-bot/1.0 +http://www.kicksaver.net/')
+        opener = urllib2.build_opener()
+        p = opener.open(request).read()
         ending_soon = BeautifulSoup(p)
     
         projects = ending_soon.select('.project-card')
@@ -41,7 +48,7 @@ def parse_projects(projects, project_list):
         parsed_link = urlparse(link_str)
         project_dict['link'] = parsed_link[1] + parsed_link[2]
         end_str = project.select('.ksr_page_timer')[0]['data-end_time']
-        end_struct = strptime(end_str[:-6], DATE_FORMAT)
+        end_struct = strptime(end_str[:-1], DATE_FORMAT)
         end_datetime = datetime.fromtimestamp(mktime(end_struct))
         project_dict['end'] = end_datetime
         
@@ -86,6 +93,7 @@ def run():
     get_ending_projects(20, SMALL_PROJECTS, project_list)
     remove_old_projects()
     save_projects(project_list)
+    memcache.flush_all()
 
 if __name__ == '__main__':
     run()

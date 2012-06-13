@@ -30,16 +30,33 @@ a:hover { color: #1071D1; }
 .incognito { color: #000000; }
 .incognito:hover { color: #000000; }
 .buttondiv { 
-    padding: 0px;
-    margin-right: -52px;
+    padding: 10px;
+    margin-right: 0px;
     margin-bottom: 0px;
 }
-.buttons { margin-bottom: 0px; }
-.infobox { 
-    text-align: right; }
+.buttons { 
+    margin-bottom: 0px;
+    display: inline; }
 .infobox p { padding: 0px; }
 .about { 
     margin-bottom: 0px;
     text-align: right;
     font-size: 80%; }
-#about { margin-top: 38px; }  
+#about { 
+    margin-top: 10px;
+    padding-top: 18px; } 
+ul.like-buttons{
+    list-style: none;
+    margin: 5px 0 20px 0;
+    padding: 0;
+    width: 100%;
+}
+
+ul.like-buttons li{
+    display: block;
+    float: left;
+    margin-right: 10px;
+}
+li.twitter-like{
+    margin-top: 2px;
+} 

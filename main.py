@@ -11,6 +11,7 @@ import webapp2
 import os
 import kickparser
 import json
+import logging
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -38,9 +39,20 @@ class ProjectHandler(webapp2.RequestHandler):
             project_dict['time'] = timeleft_str
             project_list.append(project_dict)
 
+        def get_projects(budget, update=False):
+            key = str(budget)
+            all_projects = memcache.get(key)
+            if all_projects is None or update:
+                logging.error("DB QUERY")          
+                p = Project.all()
+                all_projects = p.filter('left <= ', budget)
+                all_projects = list(all_projects)
+                memcache.set(key, all_projects)
+            return all_projects
+
         def get_next_page(cursor):
             p = Project.all().with_cursor(cursor)
-            projects = p.filter('left < ', budget)
+            projects = p.filter('left <= ', budget)
             page = projects.fetch(8)
             cursor = p.cursor()
             return page, cursor
@@ -71,27 +83,19 @@ class ProjectHandler(webapp2.RequestHandler):
         except ValueError:
             initial_budget = 0
             budget = initial_budget
-                   
-        p = Project.all()
-        all_projects = p.filter('left < ', budget)
-        page = all_projects
         
-        if all_projects.count() == 0:
+        page = get_projects(budget)
+                
+        if len(page) == 0:
             budget_toolow = True
-            while all_projects.count() < 4:
+            while len(page) < 4:
                 budget = budget + 5
-                p = Project.all()
-                all_projects = p.filter('left < ', budget)
-            page = all_projects
+                page = get_projects(budget)
         for project in page:
             make_project_dict(project, project_dicts)
         
         if pages:
             number_results = pages * 8
-            #for page in range(0, pages):
-             #   page, cursor = get_next_page(cursor)
-              #  for project in page:
-               #     make_project_dict(project, project_dicts)
         
         project_dicts.sort(key=lambda i: i['timeleft'])
 
@@ -102,7 +106,7 @@ class ProjectHandler(webapp2.RequestHandler):
         template_dict['project_dicts'] = project_dicts[:number_results]
         template_dict['initial_budget'] = initial_budget
         template_dict['budget'] = budget
-        template_dict['projects'] = all_projects.count()
+        template_dict['projects'] = len(page)
         template_dict['sort'] = sort
         template_dict['pages'] = pages
         template_dict['budget_toolow'] = budget_toolow
@@ -138,7 +142,7 @@ class MoreHandler(webapp2.RequestHandler):
             sort = 'soon'
         
         p = Project.all()
-        projects = p.filter('left < ', budget)
+        projects = p.filter('left <= ', budget)
         page = projects
 
         project_dicts = []

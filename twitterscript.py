@@ -21,7 +21,7 @@ def start_API(c_key, c_secret, a_key, a_secret):
 
 def get_last_project(api):
     """ Get the url of the last few projects tweeted. """
-    last_tweets = [tweet.text for tweet in api.user_timeline()[0:5]]
+    last_tweets = [tweet.text for tweet in api.user_timeline()[0:10]]
     projects = []
     for tweet in last_tweets:
         url = tweet.find('http://')
@@ -30,11 +30,21 @@ def get_last_project(api):
             projects.append(project.geturl())
     return projects
 
-def get_project(budget, last_projects):
+def get_close_project(budget, last_projects):
     """ Get a new project to tweet, but don't repeat the last. """
     p = Project.all()
     projects = p.filter('left < ', budget).fetch(10)
-    projects.sort(key=lambda i: i.end, reverse=True)
+    project = projects.pop()
+    while project.link in last_projects:
+        project = projects.pop()
+    return project
+
+def get_soon_project(budget, last_projects):
+    """ Get a new project to tweet, but don't repeat the last. """
+    p = Project.all()
+    projects = [project for project in p.filter('left < ', budget)]
+    timeleft = lambda i: i.end - datetime.now() + timedelta(0, 14400)
+    projects.sort(key=timeleft, reverse=True)
     project = projects.pop()
     while project.link in last_projects:
         project = projects.pop()
@@ -45,9 +55,10 @@ def tweet_project(project, api):
     tweet_string = '"%s" is $%d from its goal with %s left: %s'
     p = urlopen(project.link).read()
     project_soup = BeautifulSoup(p)
-    name = project_soup.select('#name')[0].get_text()
+    escaped_name = project_soup.select('#name')[0].get_text()[1:-1]
+    name = HTMLParser.HTMLParser().unescape(escaped_name)
     end_time = project_soup.select('.ksr_page_timer')[0]['data-end_time']
-    end_struct = strptime(end_time[:-6], '%a, %d %B %Y %H:%M:%S')
+    end_struct = strptime(end_time[:-6], '%a, %d %b %Y %H:%M:%S')
     end_datetime = datetime.fromtimestamp(mktime(end_struct))
     time_left = end_datetime - datetime.now() + timedelta(0, 14400)
     if time_left.days:
@@ -64,15 +75,10 @@ def tweet_project(project, api):
 def main():
     api = start_API(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET)
     last_project = get_last_project(api)
-    project = get_project(500, last_project)
-    tweet_project(project, api)
+    close_project = get_close_project(500, last_project)
+    soon_project = get_soon_project(500, last_project)
+    tweet_project(close_project, api)
+    tweet_project(soon_project, api)
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
- 
