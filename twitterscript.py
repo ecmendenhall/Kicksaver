@@ -55,7 +55,7 @@ def tweet_project(project, api):
     tweet_string = '"%s" is $%d from its goal with %s left: %s'
     p = urlopen(project.link).read()
     project_soup = BeautifulSoup(p)
-    escaped_name = project_soup.select('#name')[0].get_text()[1:-1]
+    escaped_name = project_soup.select('#title')[0].get_text()[1:-1]
     name = HTMLParser.HTMLParser().unescape(escaped_name)
     end_time = project_soup.select('.ksr_page_timer')[0]['data-end_time']
     end_struct = strptime(end_time[:-6], '%a, %d %b %Y %H:%M:%S')
