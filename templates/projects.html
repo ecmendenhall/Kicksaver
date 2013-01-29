@@ -125,7 +125,16 @@ $(document).ready(function() {
                 </div>
         </div>
         <div class="row">
-            
+            {% if no_results %}
+            <div class="span6 well">
+                <div>
+                    <h3>
+                        We can't find any projects near your budget right now.
+                        But check again soon: we add new projects every few hours.
+                    </h3> 
+                </div>
+            </div>
+            {% endif %}
             {% if project_dicts %}
             <div class="span12 well">
                 <div>

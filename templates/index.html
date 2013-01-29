@@ -1,29 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html 
+    itemscope 
+    itemtype="http://schema.org/Application" 
+    xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:og="http://ogp.me/ns#"
+    xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <link rel="stylesheet" href="/static/bootstrap.css" type="text/css">
-<style>
-.input-min { width: 30px; }
-</style>
+<link rel="stylesheet" href="/static/index.css" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+<title>
+Kicksaver: Find and save Kickstarter projects ending soon.
+</title>
+<meta itemprop="name" content="Kicksaver: Find and save Kickstarter projects ending soon.">
+<meta itemprop="description" content="Kicksaver finds Kickstarter projects that will end soon without meeting their funding goals. If you have $20 to spare, you can help save a struggling project!">
+<meta itemprop="image" content="http://www.kicksaver.net/static/screenshot.png">
+<meta property="og:title" content="Kicksaver: Find and save Kickstarter projects ending soon." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="http://www.kicksaver.net" />
+<meta property="og:image" content="http://www.kicksaver.net/static/screenshot.png" />
+<meta property="og:site_name" content="Kicksaver" />
+<meta property="fb:admins" content="10134383" />
+<meta property="og:description"
+          content="Kicksaver finds Kickstarter projects that will end soon without 
+                   meeting their funding goals. If you have $20 to spare, you can 
+                   help save a struggling project!"/>
+<script type="text/javascript" src="static/analytics.js"></script>
 </head>
 <body>
     <div class="container">
-        <div class="row">
-            <div class="span3 well">
-            <h1>Kicksaver</h1>
-            Find projects ending soon.
-            </div>
+        <div class="hero-unit">
+            <h1>Kick<span class="green">saver</span></h1>
+            <h3>Find and save <a href="http://kickstarter.com" class="incognito">Kickstarter</a> projects ending soon.</h3>
         </div>
         <div class="row">
-            <div class="span5 well projectform">
+            <div class="span6 well">
             <form action="/project" class="form-inline">
             <div class="input-prepend">
-            <p>I'm willing to spend up to <span class="add-on">$</span><input type="text" value="50" name="b" class="input-min"> 
+            <p>I'm willing to spend up to <span class="add-on">$</span><input type="text" value="100" name="b" class="input-min"> 
                to save a struggling project.</p>
             </div>
-            <input type="submit" value="Save something!" class="btn">
+            <input type="submit" value="Save something!" class="btn btn-large btn-success">
             </form>
             </div>
+            <div class="span3 well infobox">
+                <p>Follow <strong><a href="http://twitter.com/Kicksaver">@Kicksaver</a></strong> for live updates on projects ending soon.</p>
+                <ul class="like-buttons unstyled">
+                <li class="twitter-like">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-text="Kicksaver: Find and save Kickstarter projects ending soon." 
+                       data-via="Kicksaver" data-count="none">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                </li>
+                <li class="g-plus-one">
+                    <g:plusone size="medium" annotation="none"></g:plusone>
+                    <script type="text/javascript">
+                        (function() {
+                            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                            po.src = 'https://apis.google.com/js/plusone.js';
+                            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                        })();
+                    </script>
+                </li>
+                <li class="fb-like">
+                    <div id="fb-root"></div>
+                    <script>(function(d, s, id) {
+                      var js, fjs = d.getElementsByTagName(s)[0];
+                      if (d.getElementById(id)) return;
+                      js = d.createElement(s); js.id = id;
+                      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=101479082512";
+                      fjs.parentNode.insertBefore(js, fjs);
+                    }(document, 'script', 'facebook-jssdk'));</script>
+                    <div class="fb-like" data-href="http://www.kicksaver.net" data-send="false" data-layout="button_count" data-width="80" data-show-faces="false">
+                </ul>
+                <div>
+                <p id="about">
+                <strong><a href="/about"class="about pull-right">About</a></strong>
+                </p>
+                </div>
+
+                </div>
+                </div>
         </div>
     </div>
 </body>
