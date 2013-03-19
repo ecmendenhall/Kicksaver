@@ -40,7 +40,7 @@ def parse_projects(projects, project_list):
         project_dict['pledged'] = int(pledged_str.replace(',', '').replace('.', ''))
         link_str = project.select('a')[0]['href']
         parsed_link = urlparse(link_str)
-        project_dict['link'] = parsed_link[0] + '://' + parsed_link[1] + parsed_link[2]
+        project_dict['link'] = 'http://www.kickstarter.com' + parsed_link[1] + parsed_link[2]
         end_str = project.select('.ksr_page_timer')[0]['data-end_time']
         end_struct = strptime(end_str, DATE_FORMAT)
         end_datetime = datetime.fromtimestamp(mktime(end_struct))
@@ -51,7 +51,7 @@ def parse_projects(projects, project_list):
         except ZeroDivisionError:
             total = int(project_dict['pledged'] / .01)
 
-        project_dict['total'] = tota
+        project_dict['total'] = total
         project_dict['left'] = int(project_dict['total'] - project_dict['pledged'])
 
         if project_dict['progress'] < 1 and project_dict['total'] > 0:

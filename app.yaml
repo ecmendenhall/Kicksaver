@@ -16,6 +16,10 @@ handlers:
   script: kickparser.py
   login: admin
 
+- url: /tweet
+  script: twitter.py
+  login: admin
+
 - url: .*
   script: main.app
 
